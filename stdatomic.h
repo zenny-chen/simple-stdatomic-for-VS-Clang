@@ -3,13 +3,13 @@
 #include <stdbool.h>
 
 #define ATOMIC_VAR_INIT(value)      (value)
-#define atomic_init(object, value)  (void)(*object = value)
+#define atomic_init(object, value)  (void)(*(object) = (value))
 
 typedef volatile int    atomic_int;
 
 #ifdef __GNUC__
-#define atomic_store(object, desired)   (void)(*(volatile typeof(*object) *)object = (desired))
-#define atomic_load(object)             *(volatile typeof(*object) *)object
+#define atomic_store(object, desired)   (void)(*(volatile typeof(*(object)) *)(object) = (desired))
+#define atomic_load(object)             *(volatile typeof(*(object)) *)(object)
 #else
 #define atomic_store(object, desired)   (void)(*(object) = (desired))
 #define atomic_load(object)             *(object)
