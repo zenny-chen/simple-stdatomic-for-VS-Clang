@@ -7,8 +7,20 @@
 
 typedef volatile int    atomic_int;
 
-#define atomic_store(object, desired)   (void)(*(volatile typeof(*object) *)object = desired)
+#ifdef __GNUC__
+#define atomic_store(object, desired)   (void)(*(volatile typeof(*object) *)object = (desired))
 #define atomic_load(object)             *(volatile typeof(*object) *)object
+#else
+#define atomic_store(object, desired)   (void)(*(object) = (desired))
+#define atomic_load(object)             *(object)
+#endif
+
+#define ATOMIC_FLAG_INIT { 0 }
+
+typedef struct atomic_flag { bool _Value; } atomic_flag;
+
+extern bool atomic_flag_test_and_set(volatile atomic_flag *flag);
+extern void atomic_flag_clear(volatile atomic_flag *flag);
 
 extern int atomic_fetch_add(atomic_int *object, int operand);
 extern int atomic_fetch_sub(atomic_int *object, int operand);
