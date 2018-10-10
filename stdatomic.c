@@ -71,3 +71,13 @@ bool atomic_compare_exchange_weak(atomic_int *object, int *expected, int desired
 {
     return atomic_compare_exchange_strong(object, expected, desired);
 }
+
+bool atomic_flag_test_and_set(volatile atomic_flag *flag)
+{
+    return _InterlockedExchange8((volatile char*)flag, 1) == 1;
+}
+
+void atomic_flag_clear(volatile atomic_flag *flag)
+{
+    _InterlockedExchange8((volatile char*)flag, 0);
+}
