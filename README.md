@@ -1,4 +1,4 @@
-# simple-stdatomic-for-VS-Clang
-Simple <stdatomic.h> library implementation for Clang in Visual Studio 2017.
+# Implement several missing C11 standard libraries for MSVC in Visual Studio 2019
+Simple <stdatomic.h>, <stdalign.h> and <threads.h> implementation for MSVC in Visual Studio 2019.
 
-Clang in Visual Studio 2017 is really smart. However the MS-CodeGen backend does not support atomic operation functions. Here is a simple implementation of the atomic operation via intrinsic functions on x64 platform. 
+MSVC in Visual Studio 2019 has already support part of C11 standard features such as unicode, `_Alignof`, etc. However, there are some language features supported in MSVC but not as standard libraries. Here encapsulate some useful features and export as C11 standard libraries.
