@@ -174,9 +174,24 @@ int64_t zenny_atomic_fetch_xor64(volatile atomic_llong* object, int64_t operand)
     return _InterlockedXor64(object, operand);
 }
 
-int atomic_fetch_and(volatile atomic_int *object, int operand)
+int8_t zenny_atomic_fetch_and8(volatile atomic_schar* object, int8_t operand)
 {
-    return _InterlockedAnd((long volatile *)object, operand);
+    return _InterlockedAnd8(object, operand);
+}
+
+int16_t zenny_atomic_fetch_and16(volatile atomic_short* object, int16_t operand)
+{
+    return _InterlockedAnd16(object, operand);
+}
+
+int32_t zenny_atomic_fetch_and32(volatile atomic_long* object, int32_t operand)
+{
+    return _InterlockedAnd(object, operand);
+}
+
+int64_t zenny_atomic_fetch_and64(volatile atomic_llong* object, int64_t operand)
+{
+    return _InterlockedAnd64(object, operand);
 }
 
 int atomic_exchange(volatile atomic_int *object, int desired)
@@ -233,9 +248,19 @@ bool atomic_flag_test_and_set(volatile atomic_flag *flag)
     return _InterlockedExchange8((volatile char*)flag, 1) == 1;
 }
 
+bool atomic_flag_test_and_set_explicit(volatile atomic_flag* object, memory_order order)
+{
+    return atomic_flag_test_and_set(object);
+}
+
 void atomic_flag_clear(volatile atomic_flag *flag)
 {
     _InterlockedExchange8((volatile char*)flag, 0);
+}
+
+void atomic_flag_clear_explicit(volatile atomic_flag* object, memory_order order)
+{
+    atomic_flag_clear(object);
 }
 
 #endif
