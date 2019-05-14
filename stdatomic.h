@@ -64,6 +64,7 @@ extern bool atomic_flag_test_and_set_explicit(volatile atomic_flag* object, memo
 extern void atomic_flag_clear(volatile atomic_flag* object);
 extern void atomic_flag_clear_explicit(volatile atomic_flag* object, memory_order order);
 
+
 #define atomic_fetch_add(object, operand)   ((sizeof(*(object)) == 1) ? zenny_atomic_fetch_add8((volatile atomic_schar*)(object), (int8_t)(operand)) : \
                                             ((sizeof(*(object)) == 2) ? zenny_atomic_fetch_add16((volatile atomic_short*)(object), (int16_t)(operand)) : \
                                             ((sizeof(*(object)) == 4) ? zenny_atomic_fetch_add32((volatile atomic_long*)(object), (int32_t)(operand)) : \
@@ -75,6 +76,7 @@ extern int8_t zenny_atomic_fetch_add8(volatile atomic_schar* object, int8_t oper
 extern int16_t zenny_atomic_fetch_add16(volatile atomic_short* object, int16_t operand);
 extern int32_t zenny_atomic_fetch_add32(volatile atomic_long* object, int32_t operand);
 extern int64_t zenny_atomic_fetch_add64(volatile atomic_llong* object, int64_t operand);
+
 
 #define atomic_fetch_sub(object, operand)   ((sizeof(*(object)) == 1) ? zenny_atomic_fetch_sub8((volatile atomic_schar*)(object), (int8_t)(operand)) : \
                                             ((sizeof(*(object)) == 2) ? zenny_atomic_fetch_sub16((volatile atomic_short*)(object), (int16_t)(operand)) : \
@@ -88,6 +90,7 @@ extern int16_t zenny_atomic_fetch_sub16(volatile atomic_short* object, int16_t o
 extern int32_t zenny_atomic_fetch_sub32(volatile atomic_long* object, int32_t operand);
 extern int64_t zenny_atomic_fetch_sub64(volatile atomic_llong* object, int64_t operand);
 
+
 #define atomic_fetch_or(object, operand)    ((sizeof(*(object)) == 1) ? zenny_atomic_fetch_or8((volatile atomic_schar*)(object), (int8_t)(operand)) : \
                                             ((sizeof(*(object)) == 2) ? zenny_atomic_fetch_or16((volatile atomic_short*)(object), (int16_t)(operand)) : \
                                             ((sizeof(*(object)) == 4) ? zenny_atomic_fetch_or32((volatile atomic_long*)(object), (int32_t)(operand)) : \
@@ -99,6 +102,7 @@ extern int8_t zenny_atomic_fetch_or8(volatile atomic_schar* object, int8_t opera
 extern int16_t zenny_atomic_fetch_or16(volatile atomic_short* object, int16_t operand);
 extern int32_t zenny_atomic_fetch_or32(volatile atomic_long* object, int32_t operand);
 extern int64_t zenny_atomic_fetch_or64(volatile atomic_llong* object, int64_t operand);
+
 
 #define atomic_fetch_xor(object, operand)   ((sizeof(*(object)) == 1) ? zenny_atomic_fetch_xor8((volatile atomic_schar*)(object), (int8_t)(operand)) : \
                                             ((sizeof(*(object)) == 2) ? zenny_atomic_fetch_xor16((volatile atomic_short*)(object), (int16_t)(operand)) : \
@@ -112,6 +116,7 @@ extern int16_t zenny_atomic_fetch_xor16(volatile atomic_short* object, int16_t o
 extern int32_t zenny_atomic_fetch_xor32(volatile atomic_long* object, int32_t operand);
 extern int64_t zenny_atomic_fetch_xor64(volatile atomic_llong* object, int64_t operand);
 
+
 #define atomic_fetch_and(object, operand)   ((sizeof(*(object)) == 1) ? zenny_atomic_fetch_and8((volatile atomic_schar*)(object), (int8_t)(operand)) : \
                                             ((sizeof(*(object)) == 2) ? zenny_atomic_fetch_and16((volatile atomic_short*)(object), (int16_t)(operand)) : \
                                             ((sizeof(*(object)) == 4) ? zenny_atomic_fetch_and32((volatile atomic_long*)(object), (int32_t)(operand)) : \
@@ -124,12 +129,24 @@ extern int16_t zenny_atomic_fetch_and16(volatile atomic_short* object, int16_t o
 extern int32_t zenny_atomic_fetch_and32(volatile atomic_long* object, int32_t operand);
 extern int64_t zenny_atomic_fetch_and64(volatile atomic_llong* object, int64_t operand);
 
-extern int atomic_exchange(volatile atomic_int *object, int desired);
 
-#define atomic_compare_exchange_strong(object, expected, desired)   (sizeof(*(object)) == 1 ? zenny_atomic_compare_exchange8((volatile atomic_schar*)(object), (int8_t*)(expected), (desired)) : \
-                                                                    (sizeof(*(object)) == 2 ? zenny_atomic_compare_exchange16((volatile atomic_short*)(object), (int16_t*)(expected), (desired)) : \
-                                                                    (sizeof(*(object)) == 4 ? zenny_atomic_compare_exchange32((volatile atomic_long *)(object), (int32_t*)(expected), (desired)) : \
-                                                                     zenny_atomic_compare_exchange64((volatile atomic_llong*)(object), (int64_t*)(expected), (desired)) )))
+#define atomic_exchange(object, desired)    ((sizeof(*(object)) == 1) ? zenny_atomic_exchange8((volatile atomic_schar*)(object), (int8_t)(desired)) : \
+                                            ((sizeof(*(object)) == 2) ? zenny_atomic_exchange16((volatile atomic_short*)(object), (int16_t)(desired)) : \
+                                            ((sizeof(*(object)) == 4) ? zenny_atomic_exchange32((volatile atomic_long*)(object), (int32_t)(desired)) : \
+                                             zenny_atomic_exchange64((volatile atomic_llong*)(object), (int64_t)(desired)) )))
+
+#define atomic_exchange_explicit(object, desired, order)    atomic_exchange((object), (desired))
+
+extern int8_t zenny_atomic_exchange8(volatile atomic_schar* object, int8_t desired);
+extern int16_t zenny_atomic_exchange16(volatile atomic_short* object, int16_t desired);
+extern int32_t zenny_atomic_exchange32(volatile atomic_long* object, int32_t desired);
+extern int64_t zenny_atomic_exchange64(volatile atomic_llong* object, int64_t desired);
+
+
+#define atomic_compare_exchange_strong(object, expected, desired)   (sizeof(*(object)) == 1 ? zenny_atomic_compare_exchange8((volatile atomic_schar*)(object), (int8_t*)(expected), (int8_t)(desired)) : \
+                                                                    (sizeof(*(object)) == 2 ? zenny_atomic_compare_exchange16((volatile atomic_short*)(object), (int16_t*)(expected), (int16_t)(desired)) : \
+                                                                    (sizeof(*(object)) == 4 ? zenny_atomic_compare_exchange32((volatile atomic_long *)(object), (int32_t*)(expected), (int32_t)(desired)) : \
+                                                                     zenny_atomic_compare_exchange64((volatile atomic_llong*)(object), (int64_t*)(expected), (int64_t)(desired)) )))
 
 #define atomic_compare_exchange_weak    atomic_compare_exchange_strong
 

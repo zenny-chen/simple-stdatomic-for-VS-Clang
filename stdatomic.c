@@ -194,9 +194,24 @@ int64_t zenny_atomic_fetch_and64(volatile atomic_llong* object, int64_t operand)
     return _InterlockedAnd64(object, operand);
 }
 
-int atomic_exchange(volatile atomic_int *object, int desired)
+int8_t zenny_atomic_exchange8(volatile atomic_schar* object, int8_t desired)
 {
-    return _InterlockedExchange((volatile long*)object, desired);
+    return _InterlockedExchange8(object, desired);
+}
+
+int16_t zenny_atomic_exchange16(volatile atomic_short* object, int16_t desired)
+{
+    return _InterlockedExchange16(object, desired);
+}
+
+int32_t zenny_atomic_exchange32(volatile atomic_long* object, int32_t desired)
+{
+    return _InterlockedExchange(object, desired);
+}
+
+int64_t zenny_atomic_exchange64(volatile atomic_llong* object, int64_t desired)
+{
+    return _InterlockedExchange64(object, desired);
 }
 
 bool zenny_atomic_compare_exchange8(volatile atomic_schar* object, int8_t* expected, int8_t desired)

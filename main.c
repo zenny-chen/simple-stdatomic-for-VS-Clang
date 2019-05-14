@@ -36,7 +36,16 @@ int main(void)
     value8 = atomic_fetch_and_explicit(&atomChar, 0xa1, memory_order_relaxed);
     printf("value8 = 0x%02x, atomChar = 0x%02x\n", value8, atomic_load(&atomChar));
 
+    value8 = atomic_exchange_explicit(&atomChar, 255, memory_order_relaxed);
+    printf("value8 = %u, atomChar = %u\n", value8, atomic_load(&atomChar));
 
+    value8 = atomic_load_explicit(&atomChar, memory_order_seq_cst);
+    value8--;
+    if (!atomic_compare_exchange_weak_explicit(&atomChar, &value8, 100, memory_order_acq_rel, memory_order_acquire))
+        printf("Failed! value8 = %u\n", value8);
+
+    if (atomic_compare_exchange_weak_explicit(&atomChar, &value8, 100, memory_order_acq_rel, memory_order_acquire))
+        printf("Succeeded! atomChar = %u\n", atomChar);
 
     volatile atomic_char16_t alignas(16) atomU16;
     atomic_init(&atomU16, u'לר');
@@ -57,5 +66,16 @@ int main(void)
 
     valueU16 = atomic_fetch_and(&atomU16, 0x55a1);
     printf("valueU16 = 0x%04x, atomU16 = 0x%04x\n", valueU16, atomic_load(&atomU16));
+
+    valueU16 = atomic_exchange(&atomU16, 65535);
+    printf("valueU16 = %u, atomU16 = %u\n", valueU16, atomic_load(&atomU16));
+
+    valueU16 = atomic_load(&atomU16);
+    valueU16--;
+    if (!atomic_compare_exchange_weak(&atomU16, &valueU16, 1000))
+        printf("Failed! valueU16 = %u\n", valueU16);
+
+    if (atomic_compare_exchange_weak(&atomU16, &valueU16, 1000))
+        printf("Succeeded! atomU16 = %u\n", atomU16);
 }
 
