@@ -48,7 +48,7 @@ int main(void)
         printf("Succeeded! atomChar = %u\n", atomChar);
 
     volatile atomic_char16_t alignas(16) atomU16;
-    atomic_init(&atomU16, u'לר');
+    atomic_init(&atomU16, u'ח¦…');
 
     char16_t valueU16 = atomic_fetch_add(&atomU16, 30000);
     printf("\nvalueU16 is: %u, atomU16 = %u\n", valueU16, atomic_load(&atomU16));
